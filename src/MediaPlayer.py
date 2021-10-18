@@ -2,6 +2,7 @@ import os
 import time
 import sys
 import json
+import platform
 
 FileName = os.path.basename(sys.argv[0])
 FilePath = sys.argv[0].replace(FileName,"")
@@ -118,7 +119,13 @@ class m_window(QWidget,Ui_Form):
 			self.addNetFile()
 
 	def addFile(self,filePath,fileName):
-		self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(filePath)))
+		url = QUrl()
+		media_file = path(filePath)
+		if platform.system() == 'Linux' and os.path.isfile(filePath) == False:
+			url.setUrl(filePath, QUrl.StrictMode)
+		else:
+			url = QUrl.fromLocalFile(filePath)
+		self.playList.addMedia(QMediaContent(url))
 		self.createItem(fileName)
 	
 	#音频设置
